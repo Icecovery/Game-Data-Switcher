@@ -250,7 +250,7 @@ namespace GameDataSwitcher
             }
         }
 
-        private void SetAsDefault_Click(object sender, EventArgs e)
+        private void SetAsDefault_Click(object sender, EventArgs e)//set as default
         {
             for (int i = 0; i < List.Items.Count; i++)
             {
@@ -277,6 +277,7 @@ namespace GameDataSwitcher
             SelectItem.Text = "";
             GameDataDataInformation.Text = "";
             Refresh.Text = "Please Refresh";
+            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n"+ GamedataList[List.SelectedIndex] + " already set as the default GameData.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
         }
 
         private void TestList_Click(object sender, EventArgs e)
