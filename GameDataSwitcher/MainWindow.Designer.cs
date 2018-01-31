@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.TestList = new System.Windows.Forms.Label();
             this.List = new System.Windows.Forms.ListBox();
             this.SelectItem = new System.Windows.Forms.MaskedTextBox();
@@ -162,7 +163,7 @@
             this.Refresh.Size = new System.Drawing.Size(226, 44);
             this.Refresh.TabIndex = 9;
             this.Refresh.TabStop = false;
-            this.Refresh.Text = "Refresh List";
+            this.Refresh.Text = "Refresh";
             this.Refresh.UseVisualStyleBackColor = true;
             this.Refresh.Click += new System.EventHandler(this.Refresh_Click);
             // 
@@ -174,7 +175,7 @@
             this.SetAsDefault.Name = "SetAsDefault";
             this.SetAsDefault.Size = new System.Drawing.Size(277, 42);
             this.SetAsDefault.TabIndex = 10;
-            this.SetAsDefault.Text = "Set As Default";
+            this.SetAsDefault.Text = "Set as Default";
             this.SetAsDefault.UseVisualStyleBackColor = true;
             this.SetAsDefault.Click += new System.EventHandler(this.SetAsDefault_Click);
             // 
@@ -200,9 +201,9 @@
             this.checkBoxExit.AutoSize = true;
             this.checkBoxExit.Location = new System.Drawing.Point(152, 131);
             this.checkBoxExit.Name = "checkBoxExit";
-            this.checkBoxExit.Size = new System.Drawing.Size(155, 23);
+            this.checkBoxExit.Size = new System.Drawing.Size(165, 23);
             this.checkBoxExit.TabIndex = 18;
-            this.checkBoxExit.Text = "Exit after Lauch";
+            this.checkBoxExit.Text = "Exit after Launch";
             this.checkBoxExit.UseVisualStyleBackColor = true;
             // 
             // radioButtonnone
@@ -302,14 +303,14 @@
             // reportAIssueToolStripMenuItem
             // 
             this.reportAIssueToolStripMenuItem.Name = "reportAIssueToolStripMenuItem";
-            this.reportAIssueToolStripMenuItem.Size = new System.Drawing.Size(187, 26);
-            this.reportAIssueToolStripMenuItem.Text = "Report a issue";
+            this.reportAIssueToolStripMenuItem.Size = new System.Drawing.Size(196, 26);
+            this.reportAIssueToolStripMenuItem.Text = "Report an Issue";
             this.reportAIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAIssueToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(187, 26);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(196, 26);
             this.aboutToolStripMenuItem1.Text = "About";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
@@ -353,6 +354,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("等线", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "MainWindow";

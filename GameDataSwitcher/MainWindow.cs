@@ -22,9 +22,12 @@ namespace GameDataSwitcher
             DirectoryInfo dir = new DirectoryInfo(@".//");
             foreach (DirectoryInfo dChild in dir.GetDirectories("GameData*"))
             {
-                GamedataList[Counter] = dChild.Name;
-                List.Items.Add(dChild.Name);
-                Counter++;
+                if (File.Exists(Environment.CurrentDirectory + "/" + dChild + "/GameDataData.data") == true)
+                {
+                    GamedataList[Counter] = dChild.Name;
+                    List.Items.Add(dChild.Name);
+                    Counter++;
+                }
             }
             ViewGameData.Enabled = false;
             RenameOriginalName.Enabled = false;
@@ -83,6 +86,10 @@ namespace GameDataSwitcher
 
         private void List_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (List.SelectedIndex == -1)
+            {
+                goto exit;
+            }
             ViewGameData.Enabled = true;
             RenameOriginalName.Enabled = true;
             SelectItem.Enabled = true;
@@ -91,9 +98,15 @@ namespace GameDataSwitcher
             DeleteGameData.Enabled = true;
             SelectItem.Text = GamedataList[List.SelectedIndex];
 
+            if (GamedataList[List.SelectedIndex] == "GameData")
+            {
+                SetAsDefault.Enabled = false;
+            }
+                        
             StreamReader dataFile = new StreamReader(@".//" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
             GameDataDataInformation.Text = dataFile.ReadLine();
             dataFile.Close();
+            exit:;
         }
 
         private void ViewGameData_Click(object sender, EventArgs e)//view folder
@@ -166,11 +179,11 @@ namespace GameDataSwitcher
                 Byte[] info = new UTF8Encoding(true).GetBytes(newFolderName);
                 fs.Write(info, 0, info.Length);
             }
-            Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");      
+            Microsoft.VisualBasic.Interaction.MsgBox("Copying Squad Folder, it may take a while.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");      
 
             //copy squad
             Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/GameData/Squad", Environment.CurrentDirectory + "/" + "GameData_" + newFolderName + "/Squad", true);
-
+            Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");
             //Reload List
             ReloadList();
             exit:;
@@ -287,7 +300,7 @@ namespace GameDataSwitcher
 
         private void reportAIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            System.Diagnostics.Process.Start("https://github.com/Icecovery/Game-Data-Switcher/issues/new");
         }
     }
 }
