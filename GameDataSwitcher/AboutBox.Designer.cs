@@ -92,7 +92,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 19);
             this.label3.TabIndex = 4;
-            this.label3.Text = "V1.0.0";
+            this.label3.Text = "V1.0.1";
             // 
             // buttonGithub
             // 
@@ -123,7 +123,7 @@
             this.buttonForum.Name = "buttonForum";
             this.buttonForum.Size = new System.Drawing.Size(231, 37);
             this.buttonForum.TabIndex = 7;
-            this.buttonForum.Text = "Forum Profile";
+            this.buttonForum.Text = "Forum";
             this.buttonForum.UseVisualStyleBackColor = true;
             this.buttonForum.Click += new System.EventHandler(this.buttonForum_Click);
             // 
@@ -134,7 +134,7 @@
             this.buttonSpaceDock.Name = "buttonSpaceDock";
             this.buttonSpaceDock.Size = new System.Drawing.Size(231, 37);
             this.buttonSpaceDock.TabIndex = 8;
-            this.buttonSpaceDock.Text = "SpaceDock Profile";
+            this.buttonSpaceDock.Text = "SpaceDock";
             this.buttonSpaceDock.UseVisualStyleBackColor = true;
             this.buttonSpaceDock.Click += new System.EventHandler(this.buttonSpaceDock_Click);
             // 

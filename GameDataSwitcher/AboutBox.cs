@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameDataSwitcher
@@ -29,12 +23,12 @@ namespace GameDataSwitcher
 
         private void buttonForum_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://forum.kerbalspaceprogram.com/index.php?/profile/168058-icecovery/");
+            System.Diagnostics.Process.Start("https://forum.kerbalspaceprogram.com/index.php?/topic/170323-*");
         }
 
         private void buttonSpaceDock_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://spacedock.info/profile/IcecoveryStudio");
+            System.Diagnostics.Process.Start("https://spacedock.info/mod/1684/Game%20Data%20Switcher");
         }
 
         private void buttonReport_Click(object sender, EventArgs e)

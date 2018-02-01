@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -14,8 +8,9 @@ namespace GameDataSwitcher
     public partial class MainWindow : Form
     {
         string[] GamedataList = new string[999];
+        string[] SavesList = new string[999];
 
-        public void ReloadList()
+        public void ReloadList()//reload List
         {
             List.Items.Clear();
             int Counter = 0;
@@ -29,6 +24,12 @@ namespace GameDataSwitcher
                     Counter++;
                 }
             }
+            Counter = 0;
+            foreach (DirectoryInfo dChild in dir.GetDirectories("saves*"))
+            {
+                    SavesList[Counter] = dChild.Name;
+                    Counter++;
+            }
             ViewGameData.Enabled = false;
             RenameOriginalName.Enabled = false;
             SelectItem.Enabled = false;
@@ -39,12 +40,12 @@ namespace GameDataSwitcher
             GameDataDataInformation.Text = "";
         }
         
-        public MainWindow()
+        public MainWindow()//main window
         {
             InitializeComponent();
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)//when application start
         {
             ReloadList();
 
@@ -84,7 +85,7 @@ namespace GameDataSwitcher
             }
         }
 
-        private void List_SelectedIndexChanged(object sender, EventArgs e)
+        private void List_SelectedIndexChanged(object sender, EventArgs e)//when user choose a gamedata
         {
             if (List.SelectedIndex == -1)
             {
@@ -136,25 +137,12 @@ namespace GameDataSwitcher
             if (GamedataList[List.SelectedIndex] != "GameData")
             {
                 Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[List.SelectedIndex], "GameData_" + newname);
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + SavesList[List.SelectedIndex], "saves_" + newname);
             }
             Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Rename");
             //Reload List
             exit:
-            List.Items.Clear();
-            int Counter = 0;
-            DirectoryInfo dir = new DirectoryInfo(@".//");
-            foreach (DirectoryInfo dChild in dir.GetDirectories("GameData*"))
-            {
-                GamedataList[Counter] = dChild.Name;
-                List.Items.Add(dChild.Name);
-                Counter++;
-            }
-            ViewGameData.Enabled = false;
-            RenameOriginalName.Enabled = false;
-            SelectItem.Enabled = false;
-            GameDataDataInformation.Enabled = false;
-            SelectItem.Text = "";
-            GameDataDataInformation.Text = "";
+            ReloadList();
         }
 
         private void NewGameData_Click(object sender, EventArgs e)//new gamedata
@@ -172,21 +160,60 @@ namespace GameDataSwitcher
                 goto exit;
             }
             Directory.CreateDirectory(Environment.CurrentDirectory + "/" + "GameData_" + newFolderName);
-            
+            Directory.CreateDirectory(Environment.CurrentDirectory + "/" + "saves_" + newFolderName);
+
             //create GameDataData.data
             using (FileStream fs = File.Create(Environment.CurrentDirectory + "/" + "GameData_" + newFolderName + "/GameDataData.data"))
             {
                 Byte[] info = new UTF8Encoding(true).GetBytes(newFolderName);
                 fs.Write(info, 0, info.Length);
             }
-            Microsoft.VisualBasic.Interaction.MsgBox("Copying Squad Folder, it may take a while.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");      
+            Microsoft.VisualBasic.Interaction.MsgBox("Copying stock scenarios, training and Squad Folder, it may take a while.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");      
 
             //copy squad
             Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/GameData/Squad", Environment.CurrentDirectory + "/" + "GameData_" + newFolderName + "/Squad", true);
+            
+
+            //copy scenarios and training
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/saves/scenarios", Environment.CurrentDirectory + "/" + "saves_" + newFolderName + "/scenarios", true);
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/saves/training", Environment.CurrentDirectory + "/" + "saves_" + newFolderName + "/training", true);
+
             Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");
             //Reload List
             ReloadList();
             exit:;
+        }
+
+        private void SetAsDefault_Click(object sender, EventArgs e)//set as default
+        {
+            for (int i = 0; i < List.Items.Count; i++)
+            {
+                StreamReader dataFile = new StreamReader(@".//" + GamedataList[i] + "/GameDataData.data");
+                string folderName = dataFile.ReadLine();
+                dataFile.Close();
+                if ("GameData_" + folderName != GamedataList[i])
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[i], "GameData_" + folderName);
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + SavesList[i], "saves_" + folderName);
+                    Refresh();
+                }
+            }
+            //GamedataList[List.SelectedIndex]
+            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[List.SelectedIndex], "GameData");
+            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + SavesList[List.SelectedIndex], "saves");
+
+            Refresh();
+            List.Enabled = false;
+            ViewGameData.Enabled = false;
+            RenameOriginalName.Enabled = false;
+            SelectItem.Enabled = false;
+            GameDataDataInformation.Enabled = false;
+            SetAsDefault.Enabled = false;
+            DeleteGameData.Enabled = false;
+            SelectItem.Text = "";
+            GameDataDataInformation.Text = "";
+            Refresh.Text = "Please Refresh";
+            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n"+ GamedataList[List.SelectedIndex] + " already set as the default GameData.\n" + SavesList[List.SelectedIndex] + " already set as the default Saves.\n", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
         }
 
         private void Refresh_Click(object sender, EventArgs e)//refresh
@@ -196,20 +223,20 @@ namespace GameDataSwitcher
             Refresh.Text = "Refresh";
         }
 
-        private void refreshListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void refreshListToolStripMenuItem_Click(object sender, EventArgs e)//refresh
         {
             ReloadList();
             List.Enabled = true;
             Refresh.Text = "Refresh";
         }
 
-        private void DeleteGameData_Click(object sender, EventArgs e)
+        private void DeleteGameData_Click(object sender, EventArgs e)//delete game data
         {
             Microsoft.VisualBasic.Interaction.MsgBox("For the safety reason, I will open the game root folder for you, and you can delete it by your own.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Delete GameData");
             System.Diagnostics.Process.Start(Environment.CurrentDirectory);
         }
 
-        private void LaunchKSP_Click(object sender, EventArgs e)
+        private void LaunchKSP_Click(object sender, EventArgs e)//launch KSP
         {
             System.Diagnostics.Process ksp = new System.Diagnostics.Process();
             if (checkBoxX64.Checked)
@@ -250,56 +277,26 @@ namespace GameDataSwitcher
             }
         }
 
-        private void SetAsDefault_Click(object sender, EventArgs e)//set as default
-        {
-            for (int i = 0; i < List.Items.Count; i++)
-            {
-                StreamReader dataFile = new StreamReader(@".//" + GamedataList[i] + "/GameDataData.data");
-                string folderName = dataFile.ReadLine();
-                dataFile.Close();
-                if ("GameData_" + folderName != GamedataList[i])
-                {
-                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[i], "GameData_" + folderName);
-                    Refresh();
-                }
-            }
-            //GamedataList[List.SelectedIndex]
-            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[List.SelectedIndex], "GameData");
-            System.Threading.Thread.Sleep(1000);
-            Refresh();
-            List.Enabled = false;
-            ViewGameData.Enabled = false;
-            RenameOriginalName.Enabled = false;
-            SelectItem.Enabled = false;
-            GameDataDataInformation.Enabled = false;
-            SetAsDefault.Enabled = false;
-            DeleteGameData.Enabled = false;
-            SelectItem.Text = "";
-            GameDataDataInformation.Text = "";
-            Refresh.Text = "Please Refresh";
-            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n"+ GamedataList[List.SelectedIndex] + " already set as the default GameData.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
-        }
-
         private void TestList_Click(object sender, EventArgs e)
         {
 
-        }
+        }//nothing
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)//exit
         {
             Environment.Exit(0);
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {}
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)//nothing
+        { }
 
-        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)//about
         {
             AboutBox f = new AboutBox();
             f.Show();
         }
 
-        private void reportAIssueToolStripMenuItem_Click(object sender, EventArgs e)
+        private void reportAIssueToolStripMenuItem_Click(object sender, EventArgs e)//report
         {
             System.Diagnostics.Process.Start("https://github.com/Icecovery/Game-Data-Switcher/issues/new");
         }
