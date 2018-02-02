@@ -10,7 +10,7 @@ GDS - Game Data Switcher
 
 More Information See [Forum Page][5]
 
-![][6] [https://www.patreon.com/Icecovery
+![][6] https://www.patreon.com/Icecovery
 
 
   [1]: https://i.imgur.com/CmQ2Zd4.png
