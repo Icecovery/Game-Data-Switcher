@@ -92,7 +92,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 19);
             this.label3.TabIndex = 4;
-            this.label3.Text = "V1.0.1";
+            this.label3.Text = "V1.0.2";
             // 
             // buttonGithub
             // 

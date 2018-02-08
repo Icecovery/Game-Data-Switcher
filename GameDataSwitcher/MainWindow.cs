@@ -2,13 +2,21 @@
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace GameDataSwitcher
 {
     public partial class MainWindow : Form
     {
+        #region stupid stuff
         string[] GamedataList = new string[999];
-        string[] SavesList = new string[999];
+        //what the hell happened makes you have more than 999 GameData, Huh?
+        //i know this is a stupid solution but what else?
+        //if you have some idea plz tell me on GitHub or Forum
+        //thanks :D
+        string LOC = Environment.CurrentDirectory;
+        #endregion
 
         public void ReloadList()//reload List
         {
@@ -17,7 +25,7 @@ namespace GameDataSwitcher
             DirectoryInfo dir = new DirectoryInfo(@".//");
             foreach (DirectoryInfo dChild in dir.GetDirectories("GameData*"))
             {
-                if (File.Exists(Environment.CurrentDirectory + "/" + dChild + "/GameDataData.data") == true)
+                if (File.Exists(LOC + "/" + dChild + "/GameDataData.data") == true)
                 {
                     GamedataList[Counter] = dChild.Name;
                     List.Items.Add(dChild.Name);
@@ -25,11 +33,13 @@ namespace GameDataSwitcher
                 }
             }
             Counter = 0;
+            /*
             foreach (DirectoryInfo dChild in dir.GetDirectories("saves*"))
             {
                     SavesList[Counter] = dChild.Name;
                     Counter++;
             }
+            */
             ViewGameData.Enabled = false;
             RenameOriginalName.Enabled = false;
             SelectItem.Enabled = false;
@@ -47,14 +57,15 @@ namespace GameDataSwitcher
 
         private void MainWindow_Load(object sender, EventArgs e)//when application start
         {
+            //load the list
             ReloadList();
 
             //check ksp_x64.exe
-            if(File.Exists(Environment.CurrentDirectory + "/" + "KSP_x64.exe") == true)
+            if(File.Exists(LOC + "/" + "KSP_x64.exe") == true)
             {
                 checkBoxX64.Checked = true;
             }
-            else if(File.Exists(Environment.CurrentDirectory + "/" + "KSP_x64.exe") == false)
+            else if(File.Exists(LOC + "/" + "KSP_x64.exe") == false)
             {
                 checkBoxX64.Checked = false;
                 checkBoxX64.Enabled = false;
@@ -68,78 +79,169 @@ namespace GameDataSwitcher
                 checkBoxX64.Enabled = false;
                 checkBoxX64.Text = "Not 64-bit system";
             }
-            if (File.Exists(Environment.CurrentDirectory + "/" + "KSP_x64.exe") == false && File.Exists(Environment.CurrentDirectory + "/" + "KSP.exe") == false)
+            if (File.Exists(LOC + "/" + "KSP_x64.exe") == false && File.Exists(LOC + "/" + "KSP.exe") == false)
             {
                 Microsoft.VisualBasic.Interaction.MsgBox("Cannot found executable file of KSP, please make sure this application is under KSP root folder, and try again.\nApplication will exit.", Microsoft.VisualBasic.MsgBoxStyle.Critical, "File Not Found");
                 Environment.Exit(0);
             }
 
             //check GameDataData.data
-            if (!File.Exists(Environment.CurrentDirectory + "/GameData/GameDataData.data"))
+            if (!File.Exists(LOC + "/GameData/GameDataData.data"))
             {
-                using (FileStream fs = File.Create(Environment.CurrentDirectory + "/GameData/GameDataData.data"))
+                using (FileStream fs = File.Create(LOC + "/GameData/GameDataData.data"))
                 {
                     Byte[] info = new UTF8Encoding(true).GetBytes("original");
                     fs.Write(info, 0, info.Length);
                 }
             }
+
+            #region read setting
+            read:
+            string _buff;
+            if (File.Exists(LOC + "/GameDataSwitcherSetting.data"))
+            {
+                using (StreamReader setting = new StreamReader(LOC + "/GameDataSwitcherSetting.data"))
+                {
+                    _buff = setting.ReadToEnd();
+                }
+                Regex _reg = new Regex(@"[a-zA-Z_]\w*\s*=\s*(\d+(?!\.|x|e|d|m)u?)|^0x([\da-f]+(?!\.|x|m)u?)");
+                MatchCollection mc = _reg.Matches(_buff);
+                Dictionary<string, int> _mydic = new Dictionary<string, int>();
+                foreach (Match nObj in mc)
+                {
+                    string _obj = nObj.Value;
+                    _obj = _obj.Replace(" ", "");
+                    _mydic.Add(_obj.Split('=')[0], Convert.ToInt32(_obj.Split('=')[1]));
+
+                }
+                comboBoxHardware.SelectedIndex = _mydic["Hardware"];
+                comboBoxWindow.SelectedIndex = _mydic["Window"];
+                if (_mydic["X64"] == 1)
+                {
+                    checkBoxX64.Checked = true;
+                }
+                else
+                {
+                    checkBoxX64.Checked = false;
+                }
+                if (_mydic["Exit"] == 1)
+                {
+                    checkBoxExit.Checked = true;
+                }
+                else
+                {
+                    checkBoxExit.Checked = false;
+
+                }
+            }
+            else
+            {
+                using (FileStream fs = File.Create(LOC + "/GameDataSwitcherSetting.data"))
+                {
+                    Byte[] info = new UTF8Encoding(true).GetBytes("\n\n\n\n");
+                    fs.Write(info, 0, info.Length);
+                }
+                string[] temp = File.ReadAllLines(LOC + "/GameDataSwitcherSetting.data");
+                temp[0] = "Hardware = 0";
+                temp[1] = "Window = 0";
+                temp[2] = "X64 = 1";
+                temp[3] = "Exit = 0";
+                File.WriteAllLines(LOC + "/GameDataSwitcherSetting.data", temp);
+                goto read;
+            }
+            #endregion
         }
 
         private void List_SelectedIndexChanged(object sender, EventArgs e)//when user choose a gamedata
-        {
-            if (List.SelectedIndex == -1)
+        {            
+            if (List.SelectedIndex != -1)//if you didn't choose any thing, than do nothing
             {
-                goto exit;
-            }
-            ViewGameData.Enabled = true;
-            RenameOriginalName.Enabled = true;
-            SelectItem.Enabled = true;
-            GameDataDataInformation.Enabled = true;
-            SetAsDefault.Enabled = true;
-            DeleteGameData.Enabled = true;
-            SelectItem.Text = GamedataList[List.SelectedIndex];
+                ViewGameData.Enabled = true;
+                RenameOriginalName.Enabled = true;
+                SelectItem.Enabled = true;
+                GameDataDataInformation.Enabled = true;
+                SetAsDefault.Enabled = true;
+                DeleteGameData.Enabled = true;
+                SelectItem.Text = GamedataList[List.SelectedIndex];
 
-            if (GamedataList[List.SelectedIndex] == "GameData")
-            {
-                SetAsDefault.Enabled = false;
+                if (GamedataList[List.SelectedIndex] == "GameData")
+                {
+                    SetAsDefault.Enabled = false;
+                    DeleteGameData.Enabled = false;
+                }
+                StreamReader dataFile = new StreamReader(@".//" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
+                GameDataDataInformation.Text = dataFile.ReadLine();
+                dataFile.Close();
             }
-                        
-            StreamReader dataFile = new StreamReader(@".//" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
-            GameDataDataInformation.Text = dataFile.ReadLine();
-            dataFile.Close();
-            exit:;
         }
 
         private void ViewGameData_Click(object sender, EventArgs e)//view folder
         {
-            System.Diagnostics.Process.Start(Environment.CurrentDirectory +"/"+ GamedataList[List.SelectedIndex]);
+            //just open that folder
+            System.Diagnostics.Process.Start(LOC +"/"+ GamedataList[List.SelectedIndex]);
         }
 
         private void RenameOriginalName_Click(object sender, EventArgs e)//rename folder
         {
+            //input
             string newname = GameDataDataInformation.Text;
             newname= Microsoft.VisualBasic.Interaction.InputBox("Input a new name:", "Rename", GameDataDataInformation.Text);
+            
+            #region boring checking things
             if (newname == "" || newname == GameDataDataInformation.Text)
             {
                 Microsoft.VisualBasic.Interaction.MsgBox("New name cannot same with existing name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Rename Failed");
                 goto exit;
             }
-            if (Directory.Exists(Environment.CurrentDirectory + "/" + "GameData_" + newname) == true)
+            if (Directory.Exists(LOC + "/" + "GameData_" + newname) == true)
             {
                 Microsoft.VisualBasic.Interaction.MsgBox("Duplicate name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Rename Failed");
                 goto exit;
             }
+            #endregion
 
+            //rewrite GameDataData.data
             StreamWriter dataFile = new StreamWriter(@".//" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
             dataFile.Write(newname);
             dataFile.Close();
             
+            //rename folder
             if (GamedataList[List.SelectedIndex] != "GameData")
             {
-                Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[List.SelectedIndex], "GameData_" + newname);
-                Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + SavesList[List.SelectedIndex], "saves_" + newname);
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + GamedataList[List.SelectedIndex], "GameData_" + newname);
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + "saves_" + GameDataDataInformation.Text, "saves_" + newname);
+
+                if (Directory.Exists(LOC + "/CKAN"))
+                {
+                    try
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json", newname + "_compatible_ksp_versions.json");
+                    }
+                    catch { }
+                    try
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml", newname + "_GUIConfig.xml");
+                    }
+                    catch { }
+                    try
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan", newname + "_installed-default.ckan");
+                    }
+                    catch { }
+                    try
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_registry.json", newname + "_registry.json");
+                    }
+                    catch { }
+                }
+                //buildID
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/" + GameDataDataInformation.Text + "_buildID.txt", LOC + "/" + newname + "_buildID.txt");
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt", LOC + "/" + newname + "_buildID64.txt");
             }
+
+            //Message box
             Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Rename");
+            
             //Reload List
             exit:
             ReloadList();
@@ -147,9 +249,12 @@ namespace GameDataSwitcher
 
         private void NewGameData_Click(object sender, EventArgs e)//new gamedata
         {
+            //input
             string newFolderName = "";
             newFolderName = Microsoft.VisualBasic.Interaction.InputBox("Input a new GameData name:", "New GameData", "NewGameData");
-            if (Directory.Exists(Environment.CurrentDirectory + "/" + "GameData_" + newFolderName) == true)
+
+            #region boring checking things
+            if (Directory.Exists(LOC + "/" + "GameData_" + newFolderName) == true)
             {
                 Microsoft.VisualBasic.Interaction.MsgBox("Duplicate name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Create Failed");
                 goto exit;
@@ -159,11 +264,14 @@ namespace GameDataSwitcher
                 Microsoft.VisualBasic.Interaction.MsgBox("Please enter the name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Create Failed");
                 goto exit;
             }
-            Directory.CreateDirectory(Environment.CurrentDirectory + "/" + "GameData_" + newFolderName);
-            Directory.CreateDirectory(Environment.CurrentDirectory + "/" + "saves_" + newFolderName);
+            #endregion
+
+            //create New Gamedata
+            Directory.CreateDirectory(LOC + "/" + "GameData_" + newFolderName);
+            Directory.CreateDirectory(LOC + "/" + "saves_" + newFolderName);
 
             //create GameDataData.data
-            using (FileStream fs = File.Create(Environment.CurrentDirectory + "/" + "GameData_" + newFolderName + "/GameDataData.data"))
+            using (FileStream fs = File.Create(LOC + "/" + "GameData_" + newFolderName + "/GameDataData.data"))
             {
                 Byte[] info = new UTF8Encoding(true).GetBytes(newFolderName);
                 fs.Write(info, 0, info.Length);
@@ -171,14 +279,33 @@ namespace GameDataSwitcher
             Microsoft.VisualBasic.Interaction.MsgBox("Copying stock scenarios, training and Squad Folder, it may take a while.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");      
 
             //copy squad
-            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/GameData/Squad", Environment.CurrentDirectory + "/" + "GameData_" + newFolderName + "/Squad", true);
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/GameData/Squad", LOC + "/" + "GameData_" + newFolderName + "/Squad", true);
             
-
             //copy scenarios and training
-            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/saves/scenarios", Environment.CurrentDirectory + "/" + "saves_" + newFolderName + "/scenarios", true);
-            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(Environment.CurrentDirectory + "/saves/training", Environment.CurrentDirectory + "/" + "saves_" + newFolderName + "/training", true);
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/saves/scenarios", LOC + "/" + "saves_" + newFolderName + "/scenarios", true);
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/saves/training", LOC + "/" + "saves_" + newFolderName + "/training", true);
 
+            //CKAN Support
+            if (Directory.Exists(LOC + "/CKAN"))
+            {
+                FileStream file1 = File.Create(LOC + "/CKAN/" + newFolderName + "_compatible_ksp_versions.json");
+                FileStream file2 = File.Create(LOC + "/CKAN/" + newFolderName + "_GUIConfig.xml");
+                FileStream file3 = File.Create(LOC + "/CKAN/" + newFolderName + "_installed-default.ckan");
+                FileStream file4 = File.Create(LOC + "/CKAN/" + newFolderName + "_registry.json");
+                file1.Close();
+                file2.Close();
+                file3.Close();
+                file4.Close();
+            }
+
+            //buildID
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
+            if(Environment.Is64BitOperatingSystem)
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
+
+            //Message box
             Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");
+            
             //Reload List
             ReloadList();
             exit:;
@@ -186,119 +313,289 @@ namespace GameDataSwitcher
 
         private void SetAsDefault_Click(object sender, EventArgs e)//set as default
         {
+            string folderName;
+            //make backup logs 
+            #region make backup logs
+            try
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP.log", LOC + "/KSP_backup_" + GamedataList[List.SelectedIndex] + ".log", true);
+            }
+            catch { }
+            try
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP_Data/output_log.txt", LOC + "/KSP_Data/output_log_backup_" + GamedataList[List.SelectedIndex] + ".txt", true);
+            }
+            catch { }
+            try
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP_x64_Data/output_log.txt", LOC + "/KSP_x64_Data/output_log_backup_" + GamedataList[List.SelectedIndex] + ".txt", true);
+            }
+            catch { }
+            #endregion
+
+            //all name set to normal
             for (int i = 0; i < List.Items.Count; i++)
             {
-                StreamReader dataFile = new StreamReader(@".//" + GamedataList[i] + "/GameDataData.data");
-                string folderName = dataFile.ReadLine();
-                dataFile.Close();
-                if ("GameData_" + folderName != GamedataList[i])
+                if (GamedataList[i] == "GameData")
                 {
-                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[i], "GameData_" + folderName);
-                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + SavesList[i], "saves_" + folderName);
-                    Refresh();
-                }
+                    StreamReader dataFile = new StreamReader(@".//" + GamedataList[i] + "/GameDataData.data");
+                    folderName = dataFile.ReadLine();
+                    dataFile.Close();
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + "GameData", "GameData_" + folderName);
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + "saves", "saves_" + folderName);
+                    if (Directory.Exists(LOC + "/CKAN"))
+                    {
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/compatible_ksp_versions.json", folderName + "_compatible_ksp_versions.json");
+                        }
+                        catch { }
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/GUIConfig.xml", folderName + "_GUIConfig.xml");
+                        }
+                        catch { }
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/installed-default.ckan", folderName + "_installed-default.ckan");
+                        }
+                        catch { }
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/registry.json", folderName + "_registry.json");
+                        }
+                        catch { }
+                                           
+                    }
+                    //buildID
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/buildID.txt", folderName + "_buildID.txt");
+                    if (Environment.Is64BitOperatingSystem)
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/buildID64.txt", folderName + "_buildID64.txt");
+                }               
             }
-            //GamedataList[List.SelectedIndex]
-            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + GamedataList[List.SelectedIndex], "GameData");
-            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(Environment.CurrentDirectory + "/" + SavesList[List.SelectedIndex], "saves");
 
-            Refresh();
-            List.Enabled = false;
-            ViewGameData.Enabled = false;
-            RenameOriginalName.Enabled = false;
-            SelectItem.Enabled = false;
-            GameDataDataInformation.Enabled = false;
-            SetAsDefault.Enabled = false;
-            DeleteGameData.Enabled = false;
-            SelectItem.Text = "";
-            GameDataDataInformation.Text = "";
-            Refresh.Text = "Please Refresh";
-            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n"+ GamedataList[List.SelectedIndex] + " already set as the default GameData.\n" + SavesList[List.SelectedIndex] + " already set as the default Saves.\n", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
+            //set the name you choose as the format that KSP can read
+            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + GamedataList[List.SelectedIndex], "GameData");
+            Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + "saves_" + GameDataDataInformation.Text, "saves");
+            
+
+            //CKAN Support
+            if (Directory.Exists(LOC + "/CKAN"))
+            {
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json", "compatible_ksp_versions.json");
+                }
+                catch
+                { }
+                try
+                {                   
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml", "GUIConfig.xml");
+                }
+                catch
+                { }
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan", "installed-default.ckan");
+                }
+                catch
+                { }
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_registry.json", "registry.json");
+                }
+                catch
+                { }
+            }
+
+            //buildID
+            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(GameDataDataInformation.Text + "_buildID.txt", "buildID.txt");
+            if (Environment.Is64BitOperatingSystem)
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(GameDataDataInformation.Text + "_buildID64.txt", "buildID64.txt");
+
+            //done.
+            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n" + GamedataList[List.SelectedIndex] + " already set as the default GameData.\n" + "saves_" + GameDataDataInformation.Text + " already set as the default Saves.\nAlready made backup for all logs", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
+            ReloadList();            
         }
 
         private void Refresh_Click(object sender, EventArgs e)//refresh
         {
             ReloadList();
-            List.Enabled = true;
-            Refresh.Text = "Refresh";
-        }
-
-        private void refreshListToolStripMenuItem_Click(object sender, EventArgs e)//refresh
-        {
-            ReloadList();
-            List.Enabled = true;
-            Refresh.Text = "Refresh";
         }
 
         private void DeleteGameData_Click(object sender, EventArgs e)//delete game data
-        {
-            Microsoft.VisualBasic.Interaction.MsgBox("For the safety reason, I will open the game root folder for you, and you can delete it by your own.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Delete GameData");
-            System.Diagnostics.Process.Start(Environment.CurrentDirectory);
+        {                       
+            string msg = "";
+            msg = msg + "/" + "GameData_" + GameDataDataInformation.Text + "\n";
+            msg = msg + "/" + "saves_" + GameDataDataInformation.Text + "\n";
+            msg = msg + "/" + GameDataDataInformation.Text + "_buildID.txt" + "\n";
+            msg = msg + "/" + GameDataDataInformation.Text + "_buildID64.txt" + "\n";
+            if (Directory.Exists(LOC + "/CKAN"))
+            {
+                msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json" + "\n";
+                msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml" + "\n";
+                msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan" + "\n";
+                msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_registry.json" + "\n";
+            }            
+            Microsoft.VisualBasic.MsgBoxResult ANS = Microsoft.VisualBasic.Interaction.MsgBox("Are you sure you want DELETE\n" + msg + "?\nThis operation CANNOT be undone.", (Microsoft.VisualBasic.MsgBoxStyle)292, "Delete GameData");
+            if (ANS == Microsoft.VisualBasic.MsgBoxResult.Yes)
+            {
+                System.Diagnostics.Process.Start(LOC);
+                string Return = Microsoft.VisualBasic.Interaction.InputBox("Here is the game root folder,\nPlease check again and enter the name of GameData you want to delete below:", "Delete GameData");
+                if (Return == GameDataDataInformation.Text)
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(LOC + "/GameData_" + GameDataDataInformation.Text,Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(LOC + "/saves_" + GameDataDataInformation.Text, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID.txt");
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt");
+                    if (Directory.Exists(LOC + "/CKAN"))
+                    {
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json");
+                        }
+                        catch { }
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml");
+                        }
+                        catch { }
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan");
+                        }
+                        catch { }
+                        try
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_registry.json");
+                        }
+                        catch { }                 
+                    }
+                    //done.
+                    Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Delete GameData");
+                    ReloadList();
+                }
+                else if (Return=="")
+                {
+                    goto exit;
+                }
+                else
+                {
+                    Microsoft.VisualBasic.Interaction.MsgBox("Wrong name, files and folders will not be delete.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Delete GameData");
+                    goto exit;
+                }
+            }
+            else if (ANS == Microsoft.VisualBasic.MsgBoxResult.No)
+            {
+                goto exit;
+            }
+            exit:;
         }
 
         private void LaunchKSP_Click(object sender, EventArgs e)//launch KSP
         {
-            System.Diagnostics.Process ksp = new System.Diagnostics.Process();
+            #region save setting
+            string[] temp = File.ReadAllLines(LOC + "/GameDataSwitcherSetting.data");
+            temp[0] = "Hardware = "+ comboBoxHardware.SelectedIndex;
+            temp[1] = "Window = " + comboBoxWindow.SelectedIndex;
             if (checkBoxX64.Checked)
             {
-                ksp.StartInfo.FileName = Environment.CurrentDirectory + "/" + "KSP_x64.exe";
+                temp[2] = "X64 = 1";
             }
-            else if (!checkBoxX64.Checked)
+            else
             {
-                ksp.StartInfo.FileName = Environment.CurrentDirectory + "/" + "KSP.exe";
+                temp[2] = "X64 = 0";
             }
-            if (radioButtonnone.Checked)
+            if (checkBoxExit.Checked)
             {
-                ksp.StartInfo.Arguments = "-single-instance";
+                temp[3] = "Exit = 1";
             }
-            else if (radioButtond3d11.Checked)
+            else
             {
-                ksp.StartInfo.Arguments = "-force-d3d11 -single-instance";
+                temp[3] = "Exit = 0";
             }
-            else if (radioButtond3d9.Checked)
+            File.WriteAllLines(LOC + "/GameDataSwitcherSetting.data", temp);
+            #endregion
+
+            bool exit = checkBoxExit.Checked;
+            System.Diagnostics.Process ksp = new System.Diagnostics.Process();
+            if (checkBoxX64.Checked && Environment.Is64BitOperatingSystem)
             {
-                ksp.StartInfo.Arguments = "-force-d3d9 -single-instance";
+                ksp.StartInfo.FileName = LOC + "/" + "KSP_x64.exe";
             }
-            else if (radioButtonopengl.Checked)
+            else
             {
-                ksp.StartInfo.Arguments = "-force-opengl -single-instance";
+                ksp.StartInfo.FileName = LOC + "/" + "KSP.exe";
             }
+            switch (comboBoxHardware.SelectedIndex)
+            {
+                case 0:
+                    break;
+                case 1:
+                    ksp.StartInfo.Arguments = "-force-opengl";
+                    break;
+                case 2:
+                    ksp.StartInfo.Arguments = "-force-d3d9";
+                    break;
+                case 3:
+                    ksp.StartInfo.Arguments = "-force-d3d11";
+                    break;
+                default:
+                    break;
+            }
+            switch (comboBoxWindow.SelectedIndex)
+            {
+                case 0:
+                    break;
+                case 1:
+                    ksp.StartInfo.Arguments = ksp.StartInfo.Arguments + " -window";
+                    break;
+                case 2:
+                    ksp.StartInfo.Arguments = ksp.StartInfo.Arguments + " -popupwindow";
+                    break;
+                case 3:
+                    ksp.StartInfo.Arguments = ksp.StartInfo.Arguments + " -fullscreen";
+                    break;
+                default:
+                    break;
+            }
+            ksp.StartInfo.Arguments = ksp.StartInfo.Arguments + " -single-instance";
             try
             {
                 ksp.Start();
             }
             catch
             {
-
+                Microsoft.VisualBasic.Interaction.MsgBox("KSP Launch Failed.\nPlease try to open it manually.", Microsoft.VisualBasic.MsgBoxStyle.Critical, "Failed");
+                exit = false;
             }
-            if (checkBoxExit.Checked)
+            if (exit)
             {
                 Environment.Exit(0);
             }
         }
-
-        private void TestList_Click(object sender, EventArgs e)
-        {
-
-        }//nothing
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)//exit
         {
             Environment.Exit(0);
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)//nothing
-        { }
-
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)//about
         {
-            AboutBox f = new AboutBox();
-            f.Show();
+            AboutBox form = new AboutBox();
+            form.Show();
         }
 
         private void reportAIssueToolStripMenuItem_Click(object sender, EventArgs e)//report
         {
             System.Diagnostics.Process.Start("https://github.com/Icecovery/Game-Data-Switcher/issues/new");
         }
+
+        #region nvm about those things
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)//nothing
+        { }
+        private void TestList_Click(object sender, EventArgs e)//nothing
+        { }
+        #endregion
     }
 }

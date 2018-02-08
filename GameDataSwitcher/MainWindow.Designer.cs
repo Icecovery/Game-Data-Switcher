@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportAIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.TestList = new System.Windows.Forms.Label();
             this.List = new System.Windows.Forms.ListBox();
             this.SelectItem = new System.Windows.Forms.MaskedTextBox();
@@ -41,23 +44,41 @@
             this.Refresh = new System.Windows.Forms.Button();
             this.SetAsDefault = new System.Windows.Forms.Button();
             this.KSP = new System.Windows.Forms.GroupBox();
+            this.comboBoxWindow = new System.Windows.Forms.ComboBox();
+            this.comboBoxHardware = new System.Windows.Forms.ComboBox();
             this.checkBoxExit = new System.Windows.Forms.CheckBox();
-            this.radioButtonnone = new System.Windows.Forms.RadioButton();
-            this.radioButtond3d11 = new System.Windows.Forms.RadioButton();
-            this.radioButtond3d9 = new System.Windows.Forms.RadioButton();
-            this.radioButtonopengl = new System.Windows.Forms.RadioButton();
             this.checkBoxX64 = new System.Windows.Forms.CheckBox();
             this.LaunchKSP = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.refreshListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportAIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteGameData = new System.Windows.Forms.Button();
             this.KSP.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reportAIssueToolStripMenuItem,
+            this.aboutToolStripMenuItem1});
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
+            this.aboutToolStripMenuItem.Text = "Help";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // reportAIssueToolStripMenuItem
+            // 
+            this.reportAIssueToolStripMenuItem.Name = "reportAIssueToolStripMenuItem";
+            this.reportAIssueToolStripMenuItem.Size = new System.Drawing.Size(196, 26);
+            this.reportAIssueToolStripMenuItem.Text = "Report an Issue";
+            this.reportAIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAIssueToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(196, 26);
+            this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // TestList
             // 
@@ -77,7 +98,7 @@
             this.List.ItemHeight = 19;
             this.List.Location = new System.Drawing.Point(12, 57);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(226, 327);
+            this.List.Size = new System.Drawing.Size(226, 346);
             this.List.TabIndex = 1;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
@@ -158,7 +179,7 @@
             // Refresh
             // 
             this.Refresh.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Refresh.Location = new System.Drawing.Point(12, 395);
+            this.Refresh.Location = new System.Drawing.Point(12, 408);
             this.Refresh.Name = "Refresh";
             this.Refresh.Size = new System.Drawing.Size(226, 44);
             this.Refresh.TabIndex = 9;
@@ -181,79 +202,65 @@
             // 
             // KSP
             // 
+            this.KSP.Controls.Add(this.comboBoxWindow);
+            this.KSP.Controls.Add(this.comboBoxHardware);
             this.KSP.Controls.Add(this.checkBoxExit);
-            this.KSP.Controls.Add(this.radioButtonnone);
-            this.KSP.Controls.Add(this.radioButtond3d11);
-            this.KSP.Controls.Add(this.radioButtond3d9);
-            this.KSP.Controls.Add(this.radioButtonopengl);
             this.KSP.Controls.Add(this.checkBoxX64);
             this.KSP.Controls.Add(this.LaunchKSP);
             this.KSP.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.KSP.Location = new System.Drawing.Point(244, 282);
             this.KSP.Name = "KSP";
-            this.KSP.Size = new System.Drawing.Size(281, 157);
+            this.KSP.Size = new System.Drawing.Size(281, 170);
             this.KSP.TabIndex = 13;
             this.KSP.TabStop = false;
             this.KSP.Text = "LaunchKSP";
             // 
+            // comboBoxWindow
+            // 
+            this.comboBoxWindow.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWindow.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBoxWindow.FormattingEnabled = true;
+            this.comboBoxWindow.Items.AddRange(new object[] {
+            "Use Default Window Setting",
+            "Window",
+            "Borderless Window",
+            "Full Screen"});
+            this.comboBoxWindow.Location = new System.Drawing.Point(6, 105);
+            this.comboBoxWindow.Name = "comboBoxWindow";
+            this.comboBoxWindow.Size = new System.Drawing.Size(268, 27);
+            this.comboBoxWindow.TabIndex = 20;
+            // 
+            // comboBoxHardware
+            // 
+            this.comboBoxHardware.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHardware.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBoxHardware.FormattingEnabled = true;
+            this.comboBoxHardware.Items.AddRange(new object[] {
+            "No Hardware-accelerated",
+            "Force Open GL",
+            "Force Direct3D 9",
+            "Force Direct3D 11"});
+            this.comboBoxHardware.Location = new System.Drawing.Point(6, 72);
+            this.comboBoxHardware.Name = "comboBoxHardware";
+            this.comboBoxHardware.Size = new System.Drawing.Size(268, 27);
+            this.comboBoxHardware.TabIndex = 19;
+            // 
             // checkBoxExit
             // 
             this.checkBoxExit.AutoSize = true;
-            this.checkBoxExit.Location = new System.Drawing.Point(152, 131);
+            this.checkBoxExit.Location = new System.Drawing.Point(109, 138);
             this.checkBoxExit.Name = "checkBoxExit";
             this.checkBoxExit.Size = new System.Drawing.Size(165, 23);
             this.checkBoxExit.TabIndex = 18;
             this.checkBoxExit.Text = "Exit after Launch";
             this.checkBoxExit.UseVisualStyleBackColor = true;
             // 
-            // radioButtonnone
-            // 
-            this.radioButtonnone.AutoSize = true;
-            this.radioButtonnone.Checked = true;
-            this.radioButtonnone.Location = new System.Drawing.Point(12, 81);
-            this.radioButtonnone.Name = "radioButtonnone";
-            this.radioButtonnone.Size = new System.Drawing.Size(139, 23);
-            this.radioButtonnone.TabIndex = 17;
-            this.radioButtonnone.TabStop = true;
-            this.radioButtonnone.Text = "No argument";
-            this.radioButtonnone.UseVisualStyleBackColor = true;
-            // 
-            // radioButtond3d11
-            // 
-            this.radioButtond3d11.AutoSize = true;
-            this.radioButtond3d11.Location = new System.Drawing.Point(152, 81);
-            this.radioButtond3d11.Name = "radioButtond3d11";
-            this.radioButtond3d11.Size = new System.Drawing.Size(144, 23);
-            this.radioButtond3d11.TabIndex = 16;
-            this.radioButtond3d11.Text = "-force-d3d11";
-            this.radioButtond3d11.UseVisualStyleBackColor = true;
-            // 
-            // radioButtond3d9
-            // 
-            this.radioButtond3d9.AutoSize = true;
-            this.radioButtond3d9.Location = new System.Drawing.Point(12, 106);
-            this.radioButtond3d9.Name = "radioButtond3d9";
-            this.radioButtond3d9.Size = new System.Drawing.Size(134, 23);
-            this.radioButtond3d9.TabIndex = 15;
-            this.radioButtond3d9.Text = "-force-d3d9";
-            this.radioButtond3d9.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonopengl
-            // 
-            this.radioButtonopengl.AutoSize = true;
-            this.radioButtonopengl.Location = new System.Drawing.Point(152, 106);
-            this.radioButtonopengl.Name = "radioButtonopengl";
-            this.radioButtonopengl.Size = new System.Drawing.Size(149, 23);
-            this.radioButtonopengl.TabIndex = 14;
-            this.radioButtonopengl.Text = "-force-opengl";
-            this.radioButtonopengl.UseVisualStyleBackColor = true;
-            // 
             // checkBoxX64
             // 
             this.checkBoxX64.AutoSize = true;
             this.checkBoxX64.Checked = true;
             this.checkBoxX64.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxX64.Location = new System.Drawing.Point(12, 131);
+            this.checkBoxX64.Location = new System.Drawing.Point(7, 138);
             this.checkBoxX64.Name = "checkBoxX64";
             this.checkBoxX64.Size = new System.Drawing.Size(59, 23);
             this.checkBoxX64.TabIndex = 13;
@@ -274,45 +281,13 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshListToolStripMenuItem,
             this.aboutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(532, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(531, 28);
             this.menuStrip1.TabIndex = 14;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // refreshListToolStripMenuItem
-            // 
-            this.refreshListToolStripMenuItem.Name = "refreshListToolStripMenuItem";
-            this.refreshListToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
-            this.refreshListToolStripMenuItem.Text = "Refresh List";
-            this.refreshListToolStripMenuItem.Click += new System.EventHandler(this.refreshListToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reportAIssueToolStripMenuItem,
-            this.aboutToolStripMenuItem1});
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
-            this.aboutToolStripMenuItem.Text = "Help";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // reportAIssueToolStripMenuItem
-            // 
-            this.reportAIssueToolStripMenuItem.Name = "reportAIssueToolStripMenuItem";
-            this.reportAIssueToolStripMenuItem.Size = new System.Drawing.Size(196, 26);
-            this.reportAIssueToolStripMenuItem.Text = "Report an Issue";
-            this.reportAIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAIssueToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem1
-            // 
-            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(196, 26);
-            this.aboutToolStripMenuItem1.Text = "About";
-            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -337,7 +312,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(532, 453);
+            this.ClientSize = new System.Drawing.Size(531, 457);
             this.Controls.Add(this.DeleteGameData);
             this.Controls.Add(this.KSP);
             this.Controls.Add(this.SetAsDefault);
@@ -386,17 +361,14 @@
         private System.Windows.Forms.CheckBox checkBoxX64;
         private System.Windows.Forms.Button LaunchKSP;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem refreshListToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.RadioButton radioButtonnone;
-        private System.Windows.Forms.RadioButton radioButtond3d11;
-        private System.Windows.Forms.RadioButton radioButtond3d9;
-        private System.Windows.Forms.RadioButton radioButtonopengl;
         private System.Windows.Forms.Button DeleteGameData;
         private System.Windows.Forms.CheckBox checkBoxExit;
         private System.Windows.Forms.ToolStripMenuItem reportAIssueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.ComboBox comboBoxWindow;
+        private System.Windows.Forms.ComboBox comboBoxHardware;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 
