@@ -52,6 +52,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteGameData = new System.Windows.Forms.Button();
+            this.CloneGameData = new System.Windows.Forms.Button();
             this.KSP.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -172,7 +173,7 @@
             this.NewGameData.Name = "NewGameData";
             this.NewGameData.Size = new System.Drawing.Size(277, 44);
             this.NewGameData.TabIndex = 8;
-            this.NewGameData.Text = "Create GameData";
+            this.NewGameData.Text = "Create New GD";
             this.NewGameData.UseVisualStyleBackColor = true;
             this.NewGameData.Click += new System.EventHandler(this.NewGameData_Click);
             // 
@@ -300,19 +301,32 @@
             // 
             this.DeleteGameData.Enabled = false;
             this.DeleteGameData.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.DeleteGameData.Location = new System.Drawing.Point(248, 232);
+            this.DeleteGameData.Location = new System.Drawing.Point(390, 232);
             this.DeleteGameData.Name = "DeleteGameData";
-            this.DeleteGameData.Size = new System.Drawing.Size(277, 44);
+            this.DeleteGameData.Size = new System.Drawing.Size(135, 44);
             this.DeleteGameData.TabIndex = 15;
-            this.DeleteGameData.Text = "Delete GameData";
+            this.DeleteGameData.Text = "Delete GD";
             this.DeleteGameData.UseVisualStyleBackColor = true;
             this.DeleteGameData.Click += new System.EventHandler(this.DeleteGameData_Click);
+            // 
+            // CloneGameData
+            // 
+            this.CloneGameData.Enabled = false;
+            this.CloneGameData.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.CloneGameData.Location = new System.Drawing.Point(248, 232);
+            this.CloneGameData.Name = "CloneGameData";
+            this.CloneGameData.Size = new System.Drawing.Size(135, 44);
+            this.CloneGameData.TabIndex = 16;
+            this.CloneGameData.Text = "Clone GD";
+            this.CloneGameData.UseVisualStyleBackColor = true;
+            this.CloneGameData.Click += new System.EventHandler(this.CloneGameData_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(531, 457);
+            this.Controls.Add(this.CloneGameData);
             this.Controls.Add(this.DeleteGameData);
             this.Controls.Add(this.KSP);
             this.Controls.Add(this.SetAsDefault);
@@ -369,6 +383,7 @@
         private System.Windows.Forms.ComboBox comboBoxWindow;
         private System.Windows.Forms.ComboBox comboBoxHardware;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.Button CloneGameData;
     }
 }
 

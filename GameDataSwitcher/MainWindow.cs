@@ -16,6 +16,39 @@ namespace GameDataSwitcher
         //if you have some idea plz tell me on GitHub or Forum
         //thanks :D
         string LOC = Environment.CurrentDirectory;
+
+        //files of CKAN
+        string[] registry_json = new string[15]
+        {   "{",
+            "	\"registry_version\": 3,",
+            "	\"sorted_repositories\": {",
+            "		\"default\": {",
+            "			\"name\": \"default\",",
+            "			\"uri\": \"https://github.com/KSP-CKAN/CKAN-meta/archive/master.tar.gz\",",
+            "			\"priority\": 0,",
+            "			\"ckan_mirror\": false",
+            "		}",
+            "	},",
+            "	\"available_modules\": {},",
+            "	\"installed_dlls\": {},",
+            "	\"installed_modules\": {},",
+            "	\"installed_files\": {}",
+            "}"
+        };
+        string[] installed_default_ckan = new string[10]
+        {
+            "{",
+            "	\"kind\": \"metapackage\",",
+            "	\"abstract\": \"A list of modules installed on the default KSP instance\",",
+            "	\"name\": \"installed-default\",",
+            "	\"license\": \"unknown\",",
+            "	\"version\": \"1970.01.01.00.00.00\",",
+            "	\"identifier\": \"installed-default\",",
+            "	\"spec_version\": \"v0.0\",",
+            "	\"depends\": []",
+            "}"
+        };
+
         #endregion
 
         public void ReloadList()//reload List
@@ -46,6 +79,7 @@ namespace GameDataSwitcher
             GameDataDataInformation.Enabled = false;
             SetAsDefault.Enabled = false;
             DeleteGameData.Enabled = false;
+            CloneGameData.Enabled = false;
             SelectItem.Text = "";
             GameDataDataInformation.Text = "";
         }
@@ -162,12 +196,14 @@ namespace GameDataSwitcher
                 GameDataDataInformation.Enabled = true;
                 SetAsDefault.Enabled = true;
                 DeleteGameData.Enabled = true;
+                CloneGameData.Enabled = false;
                 SelectItem.Text = GamedataList[List.SelectedIndex];
 
                 if (GamedataList[List.SelectedIndex] == "GameData")
                 {
                     SetAsDefault.Enabled = false;
                     DeleteGameData.Enabled = false;
+                    CloneGameData.Enabled = true;
                 }
                 StreamReader dataFile = new StreamReader(@".//" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
                 GameDataDataInformation.Text = dataFile.ReadLine();
@@ -201,7 +237,7 @@ namespace GameDataSwitcher
             #endregion
 
             //rewrite GameDataData.data
-            StreamWriter dataFile = new StreamWriter(@".//" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
+            StreamWriter dataFile = new StreamWriter(LOC + GamedataList[List.SelectedIndex] + "/GameDataData.data");
             dataFile.Write(newname);
             dataFile.Close();
             
@@ -213,6 +249,7 @@ namespace GameDataSwitcher
 
                 if (Directory.Exists(LOC + "/CKAN"))
                 {
+                    /*
                     try
                     {
                         Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json", newname + "_compatible_ksp_versions.json");
@@ -223,6 +260,7 @@ namespace GameDataSwitcher
                         Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml", newname + "_GUIConfig.xml");
                     }
                     catch { }
+                    */
                     try
                     {
                         Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan", newname + "_installed-default.ckan");
@@ -288,20 +326,25 @@ namespace GameDataSwitcher
             //CKAN Support
             if (Directory.Exists(LOC + "/CKAN"))
             {
-                FileStream file1 = File.Create(LOC + "/CKAN/" + newFolderName + "_compatible_ksp_versions.json");
-                FileStream file2 = File.Create(LOC + "/CKAN/" + newFolderName + "_GUIConfig.xml");
+                //FileStream file1 = File.Create(LOC + "/CKAN/" + newFolderName + "_compatible_ksp_versions.json");
+                //FileStream file2 = File.Create(LOC + "/CKAN/" + newFolderName + "_GUIConfig.xml");
                 FileStream file3 = File.Create(LOC + "/CKAN/" + newFolderName + "_installed-default.ckan");
-                FileStream file4 = File.Create(LOC + "/CKAN/" + newFolderName + "_registry.json");
-                file1.Close();
-                file2.Close();
+                FileStream file4 = File.Create(LOC + "/CKAN/" + newFolderName + "_registry.json");              
+                //file1.Close();
+                //file2.Close();
                 file3.Close();
                 file4.Close();
+                File.WriteAllLines(LOC + "/CKAN/" + newFolderName + "_installed-default.ckan", installed_default_ckan);
+                File.WriteAllLines(LOC + "/CKAN/" + newFolderName + "_registry.json", registry_json);
             }
 
             //buildID
             Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
-            if(Environment.Is64BitOperatingSystem)
+            try
+            {
                 Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
+            }
+            catch { }
 
             //Message box
             Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "New GameData");
@@ -345,6 +388,7 @@ namespace GameDataSwitcher
                     Microsoft.VisualBasic.FileIO.FileSystem.RenameDirectory(LOC + "/" + "saves", "saves_" + folderName);
                     if (Directory.Exists(LOC + "/CKAN"))
                     {
+                        /*
                         try
                         {
                             Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/compatible_ksp_versions.json", folderName + "_compatible_ksp_versions.json");
@@ -355,6 +399,7 @@ namespace GameDataSwitcher
                             Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/GUIConfig.xml", folderName + "_GUIConfig.xml");
                         }
                         catch { }
+                        */
                         try
                         {
                             Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/installed-default.ckan", folderName + "_installed-default.ckan");
@@ -382,6 +427,7 @@ namespace GameDataSwitcher
             //CKAN Support
             if (Directory.Exists(LOC + "/CKAN"))
             {
+                /*
                 try
                 {
                     Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json", "compatible_ksp_versions.json");
@@ -394,6 +440,7 @@ namespace GameDataSwitcher
                 }
                 catch
                 { }
+                */
                 try
                 {
                     Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan", "installed-default.ckan");
@@ -423,6 +470,55 @@ namespace GameDataSwitcher
             ReloadList();
         }
 
+        private void CloneGameData_Click(object sender, EventArgs e)//clonr\e
+        {
+            //input
+            string newFolderName = "";
+            newFolderName = Microsoft.VisualBasic.Interaction.InputBox("Input a new GameData name:", "Clone GameData", GameDataDataInformation.Text + "_Clone");
+
+            #region boring checking things
+            if (Directory.Exists(LOC + "/" + "GameData_" + newFolderName) == true)
+            {
+                Microsoft.VisualBasic.Interaction.MsgBox("Duplicate name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Clone Failed");
+                goto exit;
+            }
+            if (newFolderName == "")
+            {
+                Microsoft.VisualBasic.Interaction.MsgBox("Please enter the name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Clone Failed");
+                goto exit;
+            }
+            #endregion
+
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/GameData", LOC + "/GameData_" + newFolderName, true);
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/saves", LOC + "/saves_" + newFolderName, true);
+
+            StreamWriter dataFile = new StreamWriter(LOC + "/GameData_" + newFolderName + "/GameDataData.data");
+            dataFile.Write(newFolderName);
+            dataFile.Close();
+
+            //buildID
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
+            try
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
+            }
+            catch { }
+
+            //CKAN Support
+            if (Directory.Exists(LOC + "/CKAN"))
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/CKAN/installed-default.ckan", LOC + "/CKAN/" + newFolderName + "_installed-default.ckan");
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/CKAN/registry.json", LOC + "/CKAN/" + newFolderName + "_registry.json");
+            }
+
+            //Message box
+            Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Clone GameData");
+
+            //Reload List
+            ReloadList();
+            exit:;
+        }
+
         private void DeleteGameData_Click(object sender, EventArgs e)//delete game data
         {                       
             string msg = "";
@@ -432,8 +528,10 @@ namespace GameDataSwitcher
             msg = msg + "/" + GameDataDataInformation.Text + "_buildID64.txt" + "\n";
             if (Directory.Exists(LOC + "/CKAN"))
             {
+                /*
                 msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json" + "\n";
                 msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml" + "\n";
+                */
                 msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan" + "\n";
                 msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_registry.json" + "\n";
             }            
@@ -450,6 +548,7 @@ namespace GameDataSwitcher
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt");
                     if (Directory.Exists(LOC + "/CKAN"))
                     {
+                        /*
                         try
                         {
                             Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_compatible_ksp_versions.json");
@@ -460,6 +559,7 @@ namespace GameDataSwitcher
                             Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_GUIConfig.xml");
                         }
                         catch { }
+                        */
                         try
                         {
                             Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan");
@@ -597,5 +697,6 @@ namespace GameDataSwitcher
         private void TestList_Click(object sender, EventArgs e)//nothing
         { }
         #endregion
+        
     }
 }

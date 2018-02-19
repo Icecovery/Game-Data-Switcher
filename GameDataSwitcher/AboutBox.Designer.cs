@@ -92,7 +92,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 19);
             this.label3.TabIndex = 4;
-            this.label3.Text = "V1.0.2";
+            this.label3.Text = "V1.0.3";
             // 
             // buttonGithub
             // 
@@ -101,7 +101,7 @@
             this.buttonGithub.Name = "buttonGithub";
             this.buttonGithub.Size = new System.Drawing.Size(231, 37);
             this.buttonGithub.TabIndex = 5;
-            this.buttonGithub.Text = "GitHub";
+            this.buttonGithub.Text = "GitHub Source";
             this.buttonGithub.UseVisualStyleBackColor = true;
             this.buttonGithub.Click += new System.EventHandler(this.buttonGithub_Click);
             // 
@@ -123,7 +123,7 @@
             this.buttonForum.Name = "buttonForum";
             this.buttonForum.Size = new System.Drawing.Size(231, 37);
             this.buttonForum.TabIndex = 7;
-            this.buttonForum.Text = "Forum";
+            this.buttonForum.Text = "Forum Page";
             this.buttonForum.UseVisualStyleBackColor = true;
             this.buttonForum.Click += new System.EventHandler(this.buttonForum_Click);
             // 
