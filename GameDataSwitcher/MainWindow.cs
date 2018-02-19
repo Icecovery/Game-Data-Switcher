@@ -699,4 +699,4 @@ namespace GameDataSwitcher
         #endregion
         
     }
-}
+}//Pls no more bug
