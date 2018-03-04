@@ -237,7 +237,7 @@ namespace GameDataSwitcher
             #endregion
 
             //rewrite GameDataData.data
-            StreamWriter dataFile = new StreamWriter(LOC + GamedataList[List.SelectedIndex] + "/GameDataData.data");
+            StreamWriter dataFile = new StreamWriter(LOC + "/" + GamedataList[List.SelectedIndex] + "/GameDataData.data");
             dataFile.Write(newname);
             dataFile.Close();
             
@@ -273,8 +273,17 @@ namespace GameDataSwitcher
                     catch { }
                 }
                 //buildID
-                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/" + GameDataDataInformation.Text + "_buildID.txt", LOC + "/" + newname + "_buildID.txt");
-                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt", LOC + "/" + newname + "_buildID64.txt");
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/" + GameDataDataInformation.Text + "_buildID.txt",  newname + "_buildID.txt");
+                }
+                catch { }
+                try
+                {
+                    if (Environment.Is64BitOperatingSystem)
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt",  newname + "_buildID64.txt");
+                }
+                catch { }
             }
 
             //Message box
@@ -339,10 +348,15 @@ namespace GameDataSwitcher
             }
 
             //buildID
-            Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
+            try
+            { 
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
+            }
+            catch { }
             try
             {
-                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
+                if (Environment.Is64BitOperatingSystem)
+                    Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
             }
             catch { }
 
@@ -357,6 +371,14 @@ namespace GameDataSwitcher
         private void SetAsDefault_Click(object sender, EventArgs e)//set as default
         {
             string folderName;
+
+            // Test for a locked registry, if so, abort
+            if (Directory.Exists(LOC + "/CKAN") && File.Exists(LOC + "/CKAN/registry.locked"))
+            {
+                throw new System.InvalidOperationException("GameData cannot be changed while CKAN is open");
+                return;
+            }
+
             //make backup logs 
             #region make backup logs
             try
@@ -413,9 +435,17 @@ namespace GameDataSwitcher
                                            
                     }
                     //buildID
-                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/buildID.txt", folderName + "_buildID.txt");
-                    if (Environment.Is64BitOperatingSystem)
-                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/buildID64.txt", folderName + "_buildID64.txt");
+                    try
+                    { 
+                        Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/buildID.txt", folderName + "_buildID.txt");
+                    }
+                    catch { }
+                    try
+                    {
+                        if (Environment.Is64BitOperatingSystem)
+                            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(LOC + "/buildID64.txt", folderName + "_buildID64.txt");
+                    }
+                    catch { }
                 }               
             }
 
@@ -456,12 +486,19 @@ namespace GameDataSwitcher
             }
 
             //buildID
-            Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(GameDataDataInformation.Text + "_buildID.txt", "buildID.txt");
-            if (Environment.Is64BitOperatingSystem)
-                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(GameDataDataInformation.Text + "_buildID64.txt", "buildID64.txt");
-
+            try
+            { 
+                Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(GameDataDataInformation.Text + "_buildID.txt", "buildID.txt");
+            }
+            catch { }
+            try
+            {
+                if (Environment.Is64BitOperatingSystem)
+                    Microsoft.VisualBasic.FileIO.FileSystem.RenameFile(GameDataDataInformation.Text + "_buildID64.txt", "buildID64.txt");
+            }
+            catch { }
             //done.
-            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n" + GamedataList[List.SelectedIndex] + " already set as the default GameData.\n" + "saves_" + GameDataDataInformation.Text + " already set as the default Saves.\nAlready made backup for all logs", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
+            Microsoft.VisualBasic.Interaction.MsgBox("Done.\n" + GamedataList[List.SelectedIndex] + " set as the default GameData.\n" + "saves_" + GameDataDataInformation.Text + " set as the default Saves.\nMade backup for all logs", Microsoft.VisualBasic.MsgBoxStyle.Information, "Set as Default");
             ReloadList();            
         }
 
@@ -497,10 +534,16 @@ namespace GameDataSwitcher
             dataFile.Close();
 
             //buildID
-            Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
+            try
+            { 
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID.txt", LOC + "/" + newFolderName + "_buildID.txt", true);
+            }
+            catch { }
+
             try
             {
-                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
+                if (Environment.Is64BitOperatingSystem)
+                    Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/buildID64.txt", LOC + "/" + newFolderName + "_buildID64.txt", true);
             }
             catch { }
 
@@ -544,8 +587,16 @@ namespace GameDataSwitcher
                 {
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(LOC + "/GameData_" + GameDataDataInformation.Text,Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(LOC + "/saves_" + GameDataDataInformation.Text, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
-                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID.txt");
-                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt");
+                    try
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID.txt");
+                    }
+                    catch { }
+                    try
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + GameDataDataInformation.Text + "_buildID64.txt");
+                    }
+                    catch { }
                     if (Directory.Exists(LOC + "/CKAN"))
                     {
                         /*
