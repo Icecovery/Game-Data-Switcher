@@ -1,0 +1,9 @@
+Bug fixes
+
+	Fixed error with missing slash when trying to rename Gamedata directory
+	Fixed errors when one of the buildID.txt or both of the files is missing
+	Fixed error with renaming the buildID.txt files where complete path was being
+	passed in the second argument
+
+Addition
+	Added text for CKAN/registry.locked file, if found, throws an exception
