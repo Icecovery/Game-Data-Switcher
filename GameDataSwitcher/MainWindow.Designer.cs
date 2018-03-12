@@ -85,7 +85,7 @@
             // 
             this.TestList.AutoSize = true;
             this.TestList.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.TestList.Location = new System.Drawing.Point(8, 35);
+            this.TestList.Location = new System.Drawing.Point(8, 40);
             this.TestList.Name = "TestList";
             this.TestList.Size = new System.Drawing.Size(233, 19);
             this.TestList.TabIndex = 0;
@@ -97,36 +97,36 @@
             this.List.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.List.FormattingEnabled = true;
             this.List.ItemHeight = 19;
-            this.List.Location = new System.Drawing.Point(12, 57);
+            this.List.Location = new System.Drawing.Point(12, 65);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(226, 346);
+            this.List.Size = new System.Drawing.Size(226, 384);
             this.List.TabIndex = 1;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
             // SelectItem
             // 
             this.SelectItem.Enabled = false;
-            this.SelectItem.Location = new System.Drawing.Point(248, 57);
+            this.SelectItem.Location = new System.Drawing.Point(248, 65);
             this.SelectItem.Name = "SelectItem";
             this.SelectItem.ReadOnly = true;
-            this.SelectItem.Size = new System.Drawing.Size(172, 23);
+            this.SelectItem.Size = new System.Drawing.Size(172, 25);
             this.SelectItem.TabIndex = 2;
             // 
             // GameDataDataInformation
             // 
             this.GameDataDataInformation.Culture = new System.Globalization.CultureInfo("");
             this.GameDataDataInformation.Enabled = false;
-            this.GameDataDataInformation.Location = new System.Drawing.Point(248, 105);
+            this.GameDataDataInformation.Location = new System.Drawing.Point(248, 119);
             this.GameDataDataInformation.Name = "GameDataDataInformation";
             this.GameDataDataInformation.ReadOnly = true;
-            this.GameDataDataInformation.Size = new System.Drawing.Size(172, 23);
+            this.GameDataDataInformation.Size = new System.Drawing.Size(172, 25);
             this.GameDataDataInformation.TabIndex = 3;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(244, 35);
+            this.label1.Location = new System.Drawing.Point(244, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 19);
             this.label1.TabIndex = 4;
@@ -136,7 +136,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(244, 83);
+            this.label2.Location = new System.Drawing.Point(244, 94);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 19);
             this.label2.TabIndex = 5;
@@ -146,9 +146,9 @@
             // 
             this.RenameOriginalName.Enabled = false;
             this.RenameOriginalName.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.RenameOriginalName.Location = new System.Drawing.Point(426, 86);
+            this.RenameOriginalName.Location = new System.Drawing.Point(426, 97);
             this.RenameOriginalName.Name = "RenameOriginalName";
-            this.RenameOriginalName.Size = new System.Drawing.Size(99, 42);
+            this.RenameOriginalName.Size = new System.Drawing.Size(99, 48);
             this.RenameOriginalName.TabIndex = 6;
             this.RenameOriginalName.Text = "Rename";
             this.RenameOriginalName.UseVisualStyleBackColor = true;
@@ -158,9 +158,9 @@
             // 
             this.ViewGameData.Enabled = false;
             this.ViewGameData.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ViewGameData.Location = new System.Drawing.Point(426, 38);
+            this.ViewGameData.Location = new System.Drawing.Point(426, 43);
             this.ViewGameData.Name = "ViewGameData";
-            this.ViewGameData.Size = new System.Drawing.Size(99, 42);
+            this.ViewGameData.Size = new System.Drawing.Size(99, 48);
             this.ViewGameData.TabIndex = 7;
             this.ViewGameData.Text = "View";
             this.ViewGameData.UseVisualStyleBackColor = true;
@@ -169,9 +169,9 @@
             // NewGameData
             // 
             this.NewGameData.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.NewGameData.Location = new System.Drawing.Point(248, 182);
+            this.NewGameData.Location = new System.Drawing.Point(248, 206);
             this.NewGameData.Name = "NewGameData";
-            this.NewGameData.Size = new System.Drawing.Size(277, 44);
+            this.NewGameData.Size = new System.Drawing.Size(277, 50);
             this.NewGameData.TabIndex = 8;
             this.NewGameData.Text = "Create New GD";
             this.NewGameData.UseVisualStyleBackColor = true;
@@ -180,9 +180,9 @@
             // Refresh
             // 
             this.Refresh.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Refresh.Location = new System.Drawing.Point(12, 408);
+            this.Refresh.Location = new System.Drawing.Point(12, 462);
             this.Refresh.Name = "Refresh";
-            this.Refresh.Size = new System.Drawing.Size(226, 44);
+            this.Refresh.Size = new System.Drawing.Size(226, 50);
             this.Refresh.TabIndex = 9;
             this.Refresh.TabStop = false;
             this.Refresh.Text = "Refresh";
@@ -193,9 +193,9 @@
             // 
             this.SetAsDefault.Enabled = false;
             this.SetAsDefault.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.SetAsDefault.Location = new System.Drawing.Point(248, 134);
+            this.SetAsDefault.Location = new System.Drawing.Point(248, 152);
             this.SetAsDefault.Name = "SetAsDefault";
-            this.SetAsDefault.Size = new System.Drawing.Size(277, 42);
+            this.SetAsDefault.Size = new System.Drawing.Size(277, 48);
             this.SetAsDefault.TabIndex = 10;
             this.SetAsDefault.Text = "Set as Default";
             this.SetAsDefault.UseVisualStyleBackColor = true;
@@ -209,9 +209,9 @@
             this.KSP.Controls.Add(this.checkBoxX64);
             this.KSP.Controls.Add(this.LaunchKSP);
             this.KSP.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.KSP.Location = new System.Drawing.Point(244, 282);
+            this.KSP.Location = new System.Drawing.Point(244, 320);
             this.KSP.Name = "KSP";
-            this.KSP.Size = new System.Drawing.Size(281, 170);
+            this.KSP.Size = new System.Drawing.Size(281, 193);
             this.KSP.TabIndex = 13;
             this.KSP.TabStop = false;
             this.KSP.Text = "LaunchKSP";
@@ -226,7 +226,7 @@
             "Window",
             "Borderless Window",
             "Full Screen"});
-            this.comboBoxWindow.Location = new System.Drawing.Point(6, 105);
+            this.comboBoxWindow.Location = new System.Drawing.Point(6, 119);
             this.comboBoxWindow.Name = "comboBoxWindow";
             this.comboBoxWindow.Size = new System.Drawing.Size(268, 27);
             this.comboBoxWindow.TabIndex = 20;
@@ -241,7 +241,7 @@
             "Force Open GL",
             "Force Direct3D 9",
             "Force Direct3D 11"});
-            this.comboBoxHardware.Location = new System.Drawing.Point(6, 72);
+            this.comboBoxHardware.Location = new System.Drawing.Point(6, 82);
             this.comboBoxHardware.Name = "comboBoxHardware";
             this.comboBoxHardware.Size = new System.Drawing.Size(268, 27);
             this.comboBoxHardware.TabIndex = 19;
@@ -249,9 +249,9 @@
             // checkBoxExit
             // 
             this.checkBoxExit.AutoSize = true;
-            this.checkBoxExit.Location = new System.Drawing.Point(109, 138);
+            this.checkBoxExit.Location = new System.Drawing.Point(109, 156);
             this.checkBoxExit.Name = "checkBoxExit";
-            this.checkBoxExit.Size = new System.Drawing.Size(165, 23);
+            this.checkBoxExit.Size = new System.Drawing.Size(165, 26);
             this.checkBoxExit.TabIndex = 18;
             this.checkBoxExit.Text = "Exit after Launch";
             this.checkBoxExit.UseVisualStyleBackColor = true;
@@ -261,18 +261,18 @@
             this.checkBoxX64.AutoSize = true;
             this.checkBoxX64.Checked = true;
             this.checkBoxX64.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxX64.Location = new System.Drawing.Point(7, 138);
+            this.checkBoxX64.Location = new System.Drawing.Point(7, 156);
             this.checkBoxX64.Name = "checkBoxX64";
-            this.checkBoxX64.Size = new System.Drawing.Size(59, 23);
+            this.checkBoxX64.Size = new System.Drawing.Size(59, 26);
             this.checkBoxX64.TabIndex = 13;
             this.checkBoxX64.Text = "x64";
             this.checkBoxX64.UseVisualStyleBackColor = true;
             // 
             // LaunchKSP
             // 
-            this.LaunchKSP.Location = new System.Drawing.Point(4, 22);
+            this.LaunchKSP.Location = new System.Drawing.Point(4, 25);
             this.LaunchKSP.Name = "LaunchKSP";
-            this.LaunchKSP.Size = new System.Drawing.Size(271, 44);
+            this.LaunchKSP.Size = new System.Drawing.Size(271, 50);
             this.LaunchKSP.TabIndex = 12;
             this.LaunchKSP.Text = "Launch KSP";
             this.LaunchKSP.UseVisualStyleBackColor = true;
@@ -301,9 +301,9 @@
             // 
             this.DeleteGameData.Enabled = false;
             this.DeleteGameData.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.DeleteGameData.Location = new System.Drawing.Point(390, 232);
+            this.DeleteGameData.Location = new System.Drawing.Point(390, 263);
             this.DeleteGameData.Name = "DeleteGameData";
-            this.DeleteGameData.Size = new System.Drawing.Size(135, 44);
+            this.DeleteGameData.Size = new System.Drawing.Size(135, 50);
             this.DeleteGameData.TabIndex = 15;
             this.DeleteGameData.Text = "Delete GD";
             this.DeleteGameData.UseVisualStyleBackColor = true;
@@ -313,9 +313,9 @@
             // 
             this.CloneGameData.Enabled = false;
             this.CloneGameData.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.CloneGameData.Location = new System.Drawing.Point(248, 232);
+            this.CloneGameData.Location = new System.Drawing.Point(248, 263);
             this.CloneGameData.Name = "CloneGameData";
-            this.CloneGameData.Size = new System.Drawing.Size(135, 44);
+            this.CloneGameData.Size = new System.Drawing.Size(135, 50);
             this.CloneGameData.TabIndex = 16;
             this.CloneGameData.Text = "Clone GD";
             this.CloneGameData.UseVisualStyleBackColor = true;
@@ -323,9 +323,9 @@
             // 
             // MainWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(531, 457);
+            this.ClientSize = new System.Drawing.Size(531, 518);
             this.Controls.Add(this.CloneGameData);
             this.Controls.Add(this.DeleteGameData);
             this.Controls.Add(this.KSP);
@@ -341,7 +341,7 @@
             this.Controls.Add(this.List);
             this.Controls.Add(this.TestList);
             this.Controls.Add(this.menuStrip1);
-            this.Font = new System.Drawing.Font("等线", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;

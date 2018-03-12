@@ -221,12 +221,18 @@ namespace GameDataSwitcher
         {
             //input
             string newname = GameDataDataInformation.Text;
-            newname= Microsoft.VisualBasic.Interaction.InputBox("Input a new name:", "Rename", GameDataDataInformation.Text);
-            
+            newname = Microsoft.VisualBasic.Interaction.InputBox("Input a new name:", "Rename", GameDataDataInformation.Text);
+
+
             #region boring checking things
-            if (newname == "" || newname == GameDataDataInformation.Text)
+            if (newname == "")
             {
-                Microsoft.VisualBasic.Interaction.MsgBox("New name cannot same with existing name.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Rename Failed");
+                Microsoft.VisualBasic.Interaction.MsgBox("Rename canceled.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Rename canceled");
+                goto exit;
+            }
+            if (newname == GameDataDataInformation.Text)
+            {
+                Microsoft.VisualBasic.Interaction.MsgBox("New name cannot be same with existing GameData.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Rename Failed");
                 goto exit;
             }
             if (Directory.Exists(LOC + "/" + "GameData_" + newname) == true)
@@ -375,7 +381,8 @@ namespace GameDataSwitcher
             // Test for a locked registry, if so, abort
             if (Directory.Exists(LOC + "/CKAN") && File.Exists(LOC + "/CKAN/registry.locked"))
             {
-                throw new System.InvalidOperationException("GameData cannot be changed while CKAN is open");
+                //throw new System.InvalidOperationException("GameData cannot be changed while CKAN is open");
+                Microsoft.VisualBasic.Interaction.MsgBox("GameData cannot be changed while CKAN is open.", Microsoft.VisualBasic.MsgBoxStyle.Critical, "Error");
                 return;
             }
 
@@ -507,7 +514,7 @@ namespace GameDataSwitcher
             ReloadList();
         }
 
-        private void CloneGameData_Click(object sender, EventArgs e)//clonr\e
+        private void CloneGameData_Click(object sender, EventArgs e)//clone
         {
             //input
             string newFolderName = "";
@@ -582,7 +589,7 @@ namespace GameDataSwitcher
             if (ANS == Microsoft.VisualBasic.MsgBoxResult.Yes)
             {
                 System.Diagnostics.Process.Start(LOC);
-                string Return = Microsoft.VisualBasic.Interaction.InputBox("Here is the game root folder,\nPlease check again and enter the name of GameData you want to delete below:", "Delete GameData");
+                string Return = Microsoft.VisualBasic.Interaction.InputBox("Here is the game root folder,\nPlease check again and enter the name of this GameData below:", "Delete GameData");
                 if (Return == GameDataDataInformation.Text)
                 {
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(LOC + "/GameData_" + GameDataDataInformation.Text,Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
