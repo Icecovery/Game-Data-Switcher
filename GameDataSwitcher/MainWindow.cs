@@ -5,6 +5,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
+
+//thanks for the help form linuxgurugamer!
 namespace GameDataSwitcher
 {
     public partial class MainWindow : Form
