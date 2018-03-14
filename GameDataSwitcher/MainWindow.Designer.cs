@@ -53,6 +53,10 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteGameData = new System.Windows.Forms.Button();
             this.CloneGameData = new System.Windows.Forms.Button();
+            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.automaticBackupLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteAllBackupLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.KSP.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -251,7 +255,7 @@
             this.checkBoxExit.AutoSize = true;
             this.checkBoxExit.Location = new System.Drawing.Point(109, 156);
             this.checkBoxExit.Name = "checkBoxExit";
-            this.checkBoxExit.Size = new System.Drawing.Size(165, 26);
+            this.checkBoxExit.Size = new System.Drawing.Size(165, 23);
             this.checkBoxExit.TabIndex = 18;
             this.checkBoxExit.Text = "Exit after Launch";
             this.checkBoxExit.UseVisualStyleBackColor = true;
@@ -263,7 +267,7 @@
             this.checkBoxX64.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxX64.Location = new System.Drawing.Point(7, 156);
             this.checkBoxX64.Name = "checkBoxX64";
-            this.checkBoxX64.Size = new System.Drawing.Size(59, 26);
+            this.checkBoxX64.Size = new System.Drawing.Size(59, 23);
             this.checkBoxX64.TabIndex = 13;
             this.checkBoxX64.Text = "x64";
             this.checkBoxX64.UseVisualStyleBackColor = true;
@@ -282,6 +286,7 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingToolStripMenuItem,
             this.aboutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -320,6 +325,36 @@
             this.CloneGameData.Text = "Clone GD";
             this.CloneGameData.UseVisualStyleBackColor = true;
             this.CloneGameData.Click += new System.EventHandler(this.CloneGameData_Click);
+            // 
+            // settingToolStripMenuItem
+            // 
+            this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.automaticBackupLogToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.deleteAllBackupLogsToolStripMenuItem});
+            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
+            this.settingToolStripMenuItem.Text = "Setting";
+            // 
+            // automaticBackupLogToolStripMenuItem
+            // 
+            this.automaticBackupLogToolStripMenuItem.CheckOnClick = true;
+            this.automaticBackupLogToolStripMenuItem.Name = "automaticBackupLogToolStripMenuItem";
+            this.automaticBackupLogToolStripMenuItem.Size = new System.Drawing.Size(245, 26);
+            this.automaticBackupLogToolStripMenuItem.Text = "Automatic backup log";
+            this.automaticBackupLogToolStripMenuItem.Click += new System.EventHandler(this.automaticBackupLogToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(242, 6);
+            // 
+            // deleteAllBackupLogsToolStripMenuItem
+            // 
+            this.deleteAllBackupLogsToolStripMenuItem.Name = "deleteAllBackupLogsToolStripMenuItem";
+            this.deleteAllBackupLogsToolStripMenuItem.Size = new System.Drawing.Size(245, 26);
+            this.deleteAllBackupLogsToolStripMenuItem.Text = "Delete all backup logs";
+            this.deleteAllBackupLogsToolStripMenuItem.Click += new System.EventHandler(this.deleteAllBackupLogsToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -384,6 +419,10 @@
         private System.Windows.Forms.ComboBox comboBoxHardware;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Button CloneGameData;
+        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem automaticBackupLogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllBackupLogsToolStripMenuItem;
     }
 }
 

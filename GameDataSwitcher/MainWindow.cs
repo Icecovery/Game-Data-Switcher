@@ -19,6 +19,8 @@ namespace GameDataSwitcher
         //thanks :D
         string LOC = Environment.CurrentDirectory;
 
+        bool makeBackup = false;
+        
         //files of CKAN
         string[] registry_json = new string[15]
         {   "{",
@@ -169,12 +171,29 @@ namespace GameDataSwitcher
                     checkBoxExit.Checked = false;
 
                 }
+                try
+                {
+                    if (_mydic["BackupLog"] == 1)
+                    {
+                        makeBackup = true;
+                        automaticBackupLogToolStripMenuItem.Checked = true;
+                    }
+                    else
+                    {
+                        makeBackup = false;
+                        automaticBackupLogToolStripMenuItem.Checked = false;
+                    }
+                }
+                catch
+                {
+                    File.AppendAllText(LOC + "/GameDataSwitcherSetting.data", "BackupLog = 0");
+                }
             }
             else
             {
                 using (FileStream fs = File.Create(LOC + "/GameDataSwitcherSetting.data"))
                 {
-                    Byte[] info = new UTF8Encoding(true).GetBytes("\n\n\n\n");
+                    Byte[] info = new UTF8Encoding(true).GetBytes("\n\n\n\n\n");
                     fs.Write(info, 0, info.Length);
                 }
                 string[] temp = File.ReadAllLines(LOC + "/GameDataSwitcherSetting.data");
@@ -182,6 +201,7 @@ namespace GameDataSwitcher
                 temp[1] = "Window = 0";
                 temp[2] = "X64 = 1";
                 temp[3] = "Exit = 0";
+                temp[4] = "BackupLog = 0";
                 File.WriteAllLines(LOC + "/GameDataSwitcherSetting.data", temp);
                 goto read;
             }
@@ -335,6 +355,12 @@ namespace GameDataSwitcher
 
             //copy squad
             Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/GameData/Squad", LOC + "/" + "GameData_" + newFolderName + "/Squad", true);
+
+            //DLC
+            if (Directory.Exists(LOC+ "/GameData/SquadExpansion"))
+            {
+                Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/GameData/SquadExpansion", LOC + "/" + "GameData_" + newFolderName + "/SquadExpansion", true);
+            }
             
             //copy scenarios and training
             Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(LOC + "/saves/scenarios", LOC + "/" + "saves_" + newFolderName + "/scenarios", true);
@@ -390,21 +416,24 @@ namespace GameDataSwitcher
 
             //make backup logs 
             #region make backup logs
-            try
+            if (makeBackup)
             {
-                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP.log", LOC + "/KSP_backup_" + GamedataList[List.SelectedIndex] + ".log", true);
-            }
-            catch { }
-            try
-            {
-                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP_Data/output_log.txt", LOC + "/KSP_Data/output_log_backup_" + GamedataList[List.SelectedIndex] + ".txt", true);
-            }
-            catch { }
-            try
-            {
-                Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP_x64_Data/output_log.txt", LOC + "/KSP_x64_Data/output_log_backup_" + GamedataList[List.SelectedIndex] + ".txt", true);
-            }
-            catch { }
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP.log", LOC + "/KSP_backup_" + GamedataList[List.SelectedIndex] + ".log", true);
+                }
+                catch { }
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP_Data/output_log.txt", LOC + "/KSP_Data/output_log_backup_" + GamedataList[List.SelectedIndex] + ".txt", true);
+                }
+                catch { }
+                try
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(LOC + "/KSP_x64_Data/output_log.txt", LOC + "/KSP_x64_Data/output_log_backup_" + GamedataList[List.SelectedIndex] + ".txt", true);
+                }
+                catch { }
+            }            
             #endregion
 
             //all name set to normal
@@ -587,7 +616,7 @@ namespace GameDataSwitcher
                 msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_installed-default.ckan" + "\n";
                 msg = msg + "/CKAN/" + GameDataDataInformation.Text + "_registry.json" + "\n";
             }            
-            Microsoft.VisualBasic.MsgBoxResult ANS = Microsoft.VisualBasic.Interaction.MsgBox("Are you sure you want DELETE\n" + msg + "?\nThis operation CANNOT be undone.", (Microsoft.VisualBasic.MsgBoxStyle)292, "Delete GameData");
+            Microsoft.VisualBasic.MsgBoxResult ANS = Microsoft.VisualBasic.Interaction.MsgBox("Are you sure you want DELETE\n" + msg + "?\nThis operation CANNOT be undo.", (Microsoft.VisualBasic.MsgBoxStyle)292, "Delete GameData");
             if (ANS == Microsoft.VisualBasic.MsgBoxResult.Yes)
             {
                 System.Diagnostics.Process.Start(LOC);
@@ -674,6 +703,21 @@ namespace GameDataSwitcher
             {
                 temp[3] = "Exit = 0";
             }
+            try
+            {
+                if (makeBackup)
+                {
+                    temp[4] = "BackupLog = 1";
+                }
+                else
+                {
+                    temp[4] = "BackupLog = 0";
+                }
+            }
+            catch
+            {
+
+            }
             File.WriteAllLines(LOC + "/GameDataSwitcherSetting.data", temp);
             #endregion
 
@@ -751,12 +795,96 @@ namespace GameDataSwitcher
             System.Diagnostics.Process.Start("https://github.com/Icecovery/Game-Data-Switcher/issues/new");
         }
 
+        private void automaticBackupLogToolStripMenuItem_Click(object sender, EventArgs e)//backup log or not
+        {
+            if (automaticBackupLogToolStripMenuItem.Checked)
+            {
+                makeBackup = true;
+            }
+            else if (!automaticBackupLogToolStripMenuItem.Checked)
+            {
+                makeBackup = false;
+            }
+            #region save setting
+            string[] temp = File.ReadAllLines(LOC + "/GameDataSwitcherSetting.data");
+            temp[0] = "Hardware = " + comboBoxHardware.SelectedIndex;
+            temp[1] = "Window = " + comboBoxWindow.SelectedIndex;
+            if (checkBoxX64.Checked)
+            {
+                temp[2] = "X64 = 1";
+            }
+            else
+            {
+                temp[2] = "X64 = 0";
+            }
+            if (checkBoxExit.Checked)
+            {
+                temp[3] = "Exit = 1";
+            }
+            else
+            {
+                temp[3] = "Exit = 0";
+            }
+            try
+            {
+                if (makeBackup)
+                {
+                    temp[4] = "BackupLog = 1";
+                }
+                else
+                {
+                    temp[4] = "BackupLog = 0";
+                }
+            }
+            catch
+            {
+
+            }
+            File.WriteAllLines(LOC + "/GameDataSwitcherSetting.data", temp);
+            #endregion
+        }
+
+        private void deleteAllBackupLogsToolStripMenuItem_Click(object sender, EventArgs e)//delete Logs
+        {
+            Microsoft.VisualBasic.MsgBoxResult ANS = Microsoft.VisualBasic.Interaction.MsgBox("Are you sure you want DELETE ALL backup logs?\nThis operation CANNOT be undo.", (Microsoft.VisualBasic.MsgBoxStyle)292, "Delete Logs");
+            if (ANS == Microsoft.VisualBasic.MsgBoxResult.Yes)
+            {
+                try
+                {
+                    DirectoryInfo dir = new DirectoryInfo(LOC);
+                    foreach (var file in dir.GetFiles("KSP_backup_*.log"))
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/" + file.Name);
+                    }
+                    DirectoryInfo dir2 = new DirectoryInfo(LOC + "/KSP_Data/");
+                    foreach (var file in dir2.GetFiles("output_log_backup_*.txt"))
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/KSP_Data/" + file.Name);
+                    }
+                    DirectoryInfo dir3 = new DirectoryInfo(LOC + "/KSP_x64_Data/");
+                    foreach (var file in dir3.GetFiles("output_log_backup_*.txt"))
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(LOC + "/KSP_x64_Data/" + file.Name);                       
+                    }
+                    Microsoft.VisualBasic.Interaction.MsgBox("Done.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Delete Logs");
+                }
+                catch
+                {
+                    Microsoft.VisualBasic.Interaction.MsgBox("Looks like something is wrong when trying to delete logs\nPlease close the program that may using the backup log and try again.", Microsoft.VisualBasic.MsgBoxStyle.Exclamation, "Delete Logs");
+                }               
+            }
+            else
+            {
+                Microsoft.VisualBasic.Interaction.MsgBox("Cancelled.", Microsoft.VisualBasic.MsgBoxStyle.Information, "Delete Logs");
+            }
+        }
+
         #region nvm about those things
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)//nothing
         { }
         private void TestList_Click(object sender, EventArgs e)//nothing
         { }
         #endregion
-        
+      
     }
 }

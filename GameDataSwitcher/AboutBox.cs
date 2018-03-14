@@ -10,7 +10,7 @@ namespace GameDataSwitcher
             InitializeComponent();
             this.Text = String.Format("About GameData Switcher");
             /*↓↓↓↓↓change the version number here↓↓↓↓↓↓*/
-            /*here→→→*/label3.Text = "V1.0.4";/*←←←here*/
+            /*here→→→*/label3.Text = "V1.0.5";/*←←←here*/
             /*↑↑↑↑↑change the version number here↑↑↑↑↑↑*/
         }
 
